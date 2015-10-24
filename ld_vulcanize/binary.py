@@ -92,7 +92,11 @@ class SharedLibraryABC(FilesystemArtifact):
 
 class SharedLibraryOSX(SharedLibraryABC):
 
-    EXT = frozenset(['.dylib', '.so'])
+    EXT = frozenset([
+        '.dylib',     # normal OSX convention
+        '.so',        # Python uses this on OSX
+        '.fas',       # Maxima uses this on OSX
+    ])
 
     def find_dependents(self):
         self._linker_path = dict()

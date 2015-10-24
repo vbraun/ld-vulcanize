@@ -1,0 +1,10 @@
+*~
+*.pyc
+.\#*
+\#*\#
+build
+dist
+MANIFEST
+.tox
+
+

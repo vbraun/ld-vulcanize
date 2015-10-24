@@ -28,7 +28,7 @@ Relative paths means:
 This tool converts one to the other. Typically, your build process
 uses absolute paths everywhere, and if you rename the build tree
 `/prefix` then the binaries do not work any more as they cannot find
-the shared libraries any more. Solution: Rewrite everything under
+their shared libraries. Solution: Rewrite everything under
 `/prefix` to use relative paths:
 
     $ ld_vulcanize --path=/prefix --rewrite=relative
@@ -55,6 +55,21 @@ disadvantages:
   through script interpreters.
 
 
+Help
+====
+
+    $ ld-vulcanize --help
+    usage: ld-vulcanize [-h] [--log LOG] --path PATH [--rewrite REWRITE]
+    
+    Rewrite Library Paths
+    
+    optional arguments:
+      -h, --help         show this help message and exit
+      --log LOG          one of [DEBUG, INFO, ERROR, WARNING, CRITICAL]
+      --path PATH        root of the directory tree to operate on
+      --rewrite REWRITE  one of [readonly, relative, absolute]. How to rewrite the
+                         library search paths. Default: readonly (no changes
+                         written to disk)
 
 Caveats
 =======
@@ -67,7 +82,7 @@ There are other strategies for relative paths, e.g. using `@rpath` or
 using `@executable_path` also in intermediate shared libraries. They
 are ambiguous since multiple binaries might be linking to the very
 same shared library. Although such an relative path strategy might
-very well work, ``ld_vulcanize`` cannot rewrite it back to absolute
+very well work, `ld_vulcanize` cannot rewrite it back to absolute
 paths.
 
 
@@ -83,11 +98,11 @@ Caveat: Hardlinks
 
 Does not work for hardlinked binaries in different paths. For example:
 Git installs hardlinks of the same binary into both
-``$prefix/bin/git`` and ``$prefix/lib/libexec/git-core/git`. The
-correct relative library path is either ``../lib/libz.so`` or
-``../../libz.so``, but since there is only one underlying binary one
+`$prefix/bin/git` and `$prefix/lib/libexec/git-core/git`. The
+correct relative library path is either `../lib/libz.so` or
+`../../libz.so`, but since there is only one underlying binary one
 of them will be wrong. Whichever relative path we pick will break the
-other hardlink of ``git``.
+other hardlink of `git`.
 
 Solution: Replace hard links with soft links.
 
